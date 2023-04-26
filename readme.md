@@ -32,10 +32,27 @@ ex.,
 red,green,blue,yellow,cyan,masenta,gray,white wave with 100ms wait
 
 
-wave pattern gife rpi_8chwave.c
+wave pattern give wave_pattern on  rpi_8chwave.c
+```
+int wave_pattern[8][16] = {
+          {0,10,30,50,70,80,90,100,100,90,80,70,50,30,10,0},
+          {0,10,30,50,70,80,90,100,100,90,80,70,50,30,10,0},
+          {0,10,30,50,70,80,90,100,100,90,80,70,50,30,10,0},
+          {0,10,30,50,70,80,90,100,100,90,80,70,50,30,10,0},
+          {0,10,30,50,70,80,90,100,100,90,80,70,50,30,10,0},
+          {0,10,30,50,70,80,90,100,100,90,80,70,50,30,10,0},
+          {0,10,30,50,70,80,90,100,100,90,80,70,50,30,10,0},
+          {0,10,30,50,70,80,90,100,100,90,80,70,50,30,10,0}
+                          };
+```
 
+It's make 1 wavelength with 16 LED stream,
+with brightness: 0%,10%,30%,50%,70%,80%,90%,100%,100%,90%,80%,70%,50%,30%,10%,0%.
 
+## option 
 
-
-
+-n LED number each channel
+-w loop wait (ms)
+-B Brightness (0-100%)
+-G use GRB signal out (default : RGB signal )
 
