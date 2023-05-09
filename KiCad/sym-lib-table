@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name RFID-RC522_Raspberrypi-rescue)(type Legacy)(uri ${KIPRJMOD}/RFID-RC522_Raspberrypi-rescue.lib)(options "")(descr ""))
+)
