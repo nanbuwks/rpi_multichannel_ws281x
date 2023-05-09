@@ -1,3 +1,5 @@
 (sym_lib_table
-  (lib (name RFID-RC522_Raspberrypi-rescue)(type Legacy)(uri ${KIPRJMOD}/RFID-RC522_Raspberrypi-rescue.lib)(options "")(descr ""))
+  (version 7)
+  (lib (name "RFID-RC522_Raspberrypi-rescue")(type "Legacy")(uri "${KIPRJMOD}/RFID-RC522_Raspberrypi-rescue.lib")(options "")(descr ""))
+  (lib (name "RaspberryPi-SMI16-rescue")(type "KiCad")(uri "${KIPRJMOD}/RaspberryPi-SMI16-rescue.kicad_sym")(options "")(descr ""))
 )
