@@ -51,8 +51,8 @@ with brightness: 0%,10%,30%,50%,70%,80%,90%,100%,100%,90%,80%,70%,50%,30%,10%,0%
 
 ## option 
 
--n LED number each channel
--w loop wait (ms)
--B Brightness (0-100%)
--G use GRB signal out (default : RGB signal )
+- -n LED number each channel
+- -w loop wait (ms)
+- -B Brightness (0-100%)
+- -G use GRB signal out (default : RGB signal )
 
