@@ -75,7 +75,7 @@ int on_rgbs[16] = {0xff0000, 0x00ff00, 0x0000ff, 0xffffff,
                   0xff4040, 0x40ff40, 0x4040ff, 0x404040,
                   0xff0000, 0x00ff00, 0x0000ff, 0xffffff,
                   0xff4040, 0x40ff40, 0x4040ff, 0x404040};
-int wave_pattern[8][16] = {
+/* int wave_pattern[8][16] = {
           {0,10,30,50,70,80,90,100,100,90,80,70,50,30,10,0},
           {0,10,30,50,70,80,90,100,100,90,80,70,50,30,10,0},
           {0,10,30,50,70,80,90,100,100,90,80,70,50,30,10,0},
@@ -85,7 +85,28 @@ int wave_pattern[8][16] = {
           {0,10,30,50,70,80,90,100,100,90,80,70,50,30,10,0},
           {0,10,30,50,70,80,90,100,100,90,80,70,50,30,10,0}
                           };
+ int wave_pattern[8][8] = {
+          {0,30,80,100,100,80,30,10},
+          {0,30,80,100,100,80,30,10},
+          {0,30,80,100,100,80,30,10},
+          {0,30,80,100,100,80,30,10},
+          {0,30,80,100,100,80,30,10},
+          {0,30,80,100,100,80,30,10},
+          {0,30,80,100,100,80,30,10},
+          {0,30,80,100,100,80,30,10}
+                          };
+*/
 
+ int wave_pattern[8][12] = {
+          {7,10,15,20,30,40,50,60,70,100,60,0},
+          {7,10,15,20,30,40,50,60,70,100,60,0},
+          {7,10,15,20,30,40,50,60,70,100,60,0},
+          {7,10,15,20,30,40,50,60,70,100,60,0},
+          {7,10,15,20,30,40,50,60,70,100,60,0},
+          {7,10,15,20,30,40,50,60,70,100,60,0},
+          {7,10,15,20,30,40,50,60,70,100,60,0},
+          {7,10,15,20,30,40,50,60,70,100,60,0}
+                          };
 int led_rgbs[16] = {0xff0000, 0x00ff00, 0x0000ff, 0xffffff,
                   0xff4040, 0x40ff40, 0x4040ff, 0x404040,
                   0xff0000, 0x00ff00, 0x0000ff, 0xffffff,
@@ -104,7 +125,9 @@ int brightness=100;                          // led brightness percent
 int wait=100;                          // loop wait (100ms)
 int rgb_data[CHAN_MAXLEDS][LED_NCHANS]; // RGB data
 int chan_num;                           // Current channel for data I/P
-int grb_mode=0;                           // rgb or grb mode
+int grb_mode=0, rbg_mode=0;             // rgb , grb , or rbg mode
+char direction[16]={'0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'};
+                                        // direction control '0'...normal '1'...reverce
 
 void rgb_txdata(int *rgbs, TXDATA_T *txd);
 int str_rgb(char *s, int rgbs[][LED_NCHANS], int chan);
@@ -144,6 +167,17 @@ int main(int argc, char *argv[])
                     fprintf(stderr, "Error: no numeric value\n");
                 else
                     wait = atoi(argv[++args]);
+                break;
+            case 'D':                   // -D: direction control
+                if (args >= argc-1)
+                    fprintf(stderr, "Error: no direction value\n");
+                else
+                    strncpy ( direction , argv[++args],16);
+                break;
+            case 'R':                   // -RBG: rbg  mode
+                if ('B' == toupper(argv[args][2]) && 'G' == toupper(argv[args][3])){
+                   rbg_mode = 1;
+                }
                 break;
             case 'G':                   // -G: grb  mode
                 grb_mode = 1;
@@ -198,7 +232,14 @@ int main(int argc, char *argv[])
                 {
                     for (ch=0; ch<LED_NCHANS; ch++)
                     { 
-                        patterndata = wave_pattern[ch][(n-(oset % 16)+16) % 16]; 
+                        if ( '0' == direction[ch])
+                        {
+//                           patterndata = wave_pattern[ch][(n-(oset % 16)+16) % 16]; 
+                           patterndata = wave_pattern[ch][(n-(oset % 12)+12) % 12]; 
+                        } else {
+//                           patterndata = wave_pattern[ch][(n+oset) % 8]; 
+                           patterndata = wave_pattern[ch][(n+oset) % 12]; 
+                        }
                         r=( (rgb_data[0][ch]) & 0xFF0000 )  >> 16;
                         g=( (rgb_data[0][ch]) & 0x00FF00 )  >> 8;
                         b=( (rgb_data[0][ch]) & 0x0000FF ) ;
@@ -207,14 +248,19 @@ int main(int argc, char *argv[])
                         b = b * patterndata * brightness / 100 / 100;
                         if ( 1 == grb_mode ) {
                            rgbdata = (g << 16) + (r << 8) + b;
-                        } else {
+                        } else if ( 1 == rbg_mode ) {
+                           rgbdata = (r << 16) +( b << 8) + g;
+			} else {
                            rgbdata = (r << 16) +( g << 8) + b;
                         }
                         led_rgbs[ch]=rgbdata; 
+                        if (( 0 == ch))
+                           printf("%06x %06x %02x %02x %02x %d %d \n",rgb_data[0][ch],rgbdata,r,g,b,patterndata,brightness);
                     }
                     rgb_txdata(led_rgbs, &tx_buffer[LED_TX_OSET(n)]);
                 }
             }
+            printf("%d %d\n",n+oset,(n+oset)%16);
             oset++;
 #if LED_NCHANS <= 8
             swap_bytes(tx_buffer, TX_BUFF_SIZE(chan_ledcount));
