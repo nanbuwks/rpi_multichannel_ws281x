@@ -2,7 +2,7 @@
 
 
 It uses the secondary memory interface (SMI) of the RaspberryPi to generate accurate signals.
-The SMI is said to be capable of using 18 channels, but the article only shows 8 or 16 channels. The SMI bus signals are SD0~SD17 and are assigned to GPIOs 8~25.
+The SMI is said to be capable of using 18 channels, but the article only shows 8 or 16 channels. The SMI bus signals are SD0 - SD17 and are assigned to GPIOs 8 - 25.
 
 
 # Hardware
